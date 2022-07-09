@@ -2,8 +2,16 @@
 
 margin=1
 
-window_width=18
-window_height=14
+window_width=$(tput cols)
+window_height=$(tput lines)
+
+while (( 7*window_width > 9*window_height )); do
+	window_width=$((window_width - 1))
+done
+
+while (( 9*window_height > 7*window_width )); do
+	window_height=$((window_height - 1))
+done
 
 width=$((window_width - 2*margin))
 height=$((window_height - 2*margin))
