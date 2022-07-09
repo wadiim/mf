@@ -81,6 +81,8 @@ generate_hand() {
 				fi
 			elif (( line > back_height )); then
 				hand_str="$hand_str│"
+			else
+				hand_str="$hand_str "
 			fi
 			hand_str="$hand_str$(repeat_char ' ' $((finger_width - 2)))"
 		else
@@ -108,6 +110,8 @@ generate_hand() {
 				fi
 			elif (( line > back_height )); then
 				hand_str="$hand_str│"
+			else
+				hand_str="$hand_str "
 			fi
 			hand_str="$hand_str$(repeat_char ' ' $((finger_width - 2)))"
 		else
@@ -135,7 +139,7 @@ generate_hand() {
 			elif ((line > back_height )); then
 				hand_str="$hand_str│"
 			else
-				hand_str="$hand_str$(repeat_char ' ' $((finger_width - 1)))"
+				hand_str="$hand_str "
 			fi
 			hand_str="$hand_str$(repeat_char ' ' $((finger_width - 2)))│"
 		else
@@ -148,7 +152,7 @@ generate_hand() {
 
 		hand_str="$hand_str\n"
 	done
-	hand_str="$hand_str└$(repeat_char '─' $((width - 2)))┘"
+	hand_str="$hand_str└$(repeat_char '─' $((5*(finger_width - 1) - 1)))┘"
 	echo -ne "$hand_str"
 }
 
