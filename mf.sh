@@ -5,16 +5,16 @@ margin=1
 window_width=$(tput cols)
 window_height=$(tput lines)
 
-while (( 7*window_width > 9*window_height )); do
-	window_width=$((window_width - 1))
-done
-
-while (( 9*window_height > 7*window_width )); do
-	window_height=$((window_height - 1))
-done
-
 width=$((window_width - 2*margin))
 height=$((window_height - 2*margin))
+
+while (( 7*width > 9*height )); do
+	width=$((width - 1))
+done
+
+while (( 9*height > 7*width )); do
+	height=$((height - 1))
+done
 
 finger_width=$(((width - 1) / 5 + 1))
 back_height=$((height / 3))
@@ -32,7 +32,18 @@ repeat_char() {
 generate_hand() {
 	middle_finger_height=$1
 	hand_str=""
+
+	# Center vertically
+	for (( i=0; i<$(( (window_height - height) / 2 )); i+=1 )); do
+		echo ""
+	done
+
 	for (( line=$height; line>1; line-=1 )); do
+		# Center horizontally
+		for (( i=0; i<$(( (window_width - (5*(finger_width - 1) + 1)) / 2 )); i+=1 )); do
+			hand_str="$hand_str "
+		done
+
 		# Draw thumb
 		if (( line > (finger_width - 2) + thumb_height )); then
 			hand_str="$hand_str$(repeat_char ' ' $((finger_width - 1)))"
@@ -152,7 +163,7 @@ generate_hand() {
 
 		hand_str="$hand_str\n"
 	done
-	hand_str="$hand_str└$(repeat_char '─' $((5*(finger_width - 1) - 1)))┘"
+	hand_str="$hand_str$(repeat_char ' ' $(( (window_width - (5*(finger_width - 1) + 1)) / 2 )))└$(repeat_char '─' $((5*(finger_width - 1) - 1)))┘"
 	echo -ne "$hand_str"
 }
 
