@@ -30,6 +30,14 @@ switch_to_normal_input_mode() {
 	stty icanon echo
 }
 
+hide_cursor() {
+	echo -ne "\x1b[?25l"
+}
+
+show_cursor() {
+	echo -ne "\x1b[?25h"
+}
+
 repeat_char() {
 	for i in $(seq 1 $2); do echo -n "$1"; done
 }
@@ -124,7 +132,9 @@ generate_hand() {
 calculate_dimensions
 switch_to_alternate_buffer
 switch_to_raw_input_mode
+hide_cursor
 echo "$(generate_hand straightened_middle_finger_height)"
 read -n1 kbd
+show_cursor
 switch_to_normal_input_mode
 switch_to_normal_buffer
