@@ -144,4 +144,9 @@ generate_hand() {
 	echo -ne "$hand_str"
 }
 
+echo -ne "\x1b[?1049h\x1b[H"
 echo "$(generate_hand straightened_middle_finger_height)"
+stty -icanon -echo
+read -n1 kbd
+stty icanon echo
+echo -ne "\x1b[?1049l"
