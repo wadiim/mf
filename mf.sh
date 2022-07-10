@@ -140,19 +140,24 @@ generate_hand() {
 }
 
 run_animation() {
-	local hand_with_bent_middle_finger="$(generate_hand bent_middle_finger_height)"
-	local hand_with_straightened_middle_finger="$(generate_hand straightened_middle_finger_height)"
+	local hand1=""
+	local hand2=""
 	while true; do
+		if (( window_width != $(tput cols) )) || (( window_height != $(tput lines) )); then
+			calculate_dimensions
+			hand1="$(generate_hand bent_middle_finger_height)"
+			hand2="$(generate_hand straightened_middle_finger_height)"
+		else
+			local tmp=$hand1
+			hand1=$hand2
+			hand2=$tmp
+		fi
 		clear_screen
-		echo "$hand_with_bent_middle_finger"
-		if [[ -n "$(read_char)" ]]; then break; fi
-		clear_screen
-		echo "$hand_with_straightened_middle_finger"
+		echo "$hand1"
 		if [[ -n "$(read_char)" ]]; then break; fi
 	done
 }
 
-calculate_dimensions
 switch_to_alternate_buffer
 switch_to_raw_input_mode
 hide_cursor
