@@ -70,10 +70,14 @@ calculate_dimensions() {
 	done
 
 	finger_width=$(((width - 1) / 5 + 1))
+	if (( finger_width < 2 )); then finger_width=2; fi
 	back_height=$((height / 3))
 	thumb_height=$((height / 4))
 	index_finger_height=$((height / 3))
 	straightened_middle_finger_height=$((height - back_height))
+	if (( straightened_middle_finger_height == 0 )); then
+		straightened_middle_finger_height=1
+	fi
 	bent_middle_finger_height=$((height*10 / 24))
 	ring_finger_height=$((height / 3))
 	pinky_finger_height=$((height / 4))
@@ -83,10 +87,37 @@ calculate_dimensions() {
 
 generate_hand() {
 	local middle_finger_height=$1
-	shift
-	local finger_heights=(thumb_height index_finger_height middle_finger_height ring_finger_height pinky_finger_height)
 	local hand_str=""
-	local base_heights=($((finger_width - 2)) back_height back_height back_height back_height)
+
+	if (( window_height <= 4 )); then
+		hand_str="$(repeat_char '\n' $(( (window_height - 1) / 2 )))"
+		local spaces="$(repeat_char ' ' $(( (window_width - 3) / 2 )))"
+		if (( middle_finger_height == bent_middle_finger_height )); then
+			hand_str="$hand_str$spaces..."
+		else
+			hand_str="$hand_str$spaces.|."
+		fi
+		echo -ne "$hand_str"
+		return
+	elif (( window_height <= 6 )); then
+		local spaces="$(repeat_char ' ' $(( (window_width - 4) / 2 )))"
+		if (( middle_finger_height == bent_middle_finger_height )); then
+			hand_str="$(repeat_char '\n' $(( ( (window_height - 2) + 1) / 2 )))"
+			hand_str="$hand_str$spaces┌┬┬┐\n$spaces└──┘"
+		else
+			hand_str="$(repeat_char '\n' $(( (window_height - 3) / 2 )))"
+			hand_str="$hand_str$spaces ┌┐\n$spaces┌┤├┐\n$spaces└──┘"
+		fi
+		echo -ne "$hand_str"
+		return
+	fi
+
+	local finger_heights=(thumb_height index_finger_height middle_finger_height ring_finger_height pinky_finger_height)
+	local thumb_base_height=$((finger_width - 2))
+	if (( height <= 8 )); then
+		thumb_base_height=1
+	fi
+	local base_heights=(thumb_base_height back_height back_height back_height back_height)
 
 	# Center vertically
 	for (( i=0; i<$(( (window_height - height) / 2 )); i+=1 )); do
